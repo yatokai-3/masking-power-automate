@@ -27,6 +27,6 @@ def mask_text(text):
     return result.text
 
 
-if __name__ == "__main__":
-    sample = "Hi, my name is Aryasen Gupta. My phone number is 212-555-5555 and email is aryasen@example.com"
-    print(mask_text(sample))
+# if __name__ == "__main__":
+#     sample = "Hi, my name is Aryasen Gupta. My phone number is 212-555-5555 and email is aryasen@example.com"
+#     print(mask_text(sample))
