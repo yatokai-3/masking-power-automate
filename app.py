@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({"status": "ok", "message": "Masking API is running"})
+    return jsonify({"status": "ok", "message": "Masking API is running, new code with small lib of spacy."})
 
 @app.route("/health", methods=["GET"])
 def health():
