@@ -5,11 +5,11 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({"status": "ok", "message": "Masking API is running"})
+    return jsonify({"status": "ok", "message": "Masking API is running, this is new code, reducing the size of spacy. . . "})
 
 @app.route("/health", methods=["GET"])
 def health():
-    return jsonify({"status": "healthy"})
+    return jsonify({"status": "healthy with new code"})
 
 @app.route("/mask", methods=["POST"])
 def mask():
