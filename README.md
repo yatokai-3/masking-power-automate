@@ -31,3 +31,21 @@ The API is used to **mask sensitive information from email content** (or any tex
 - **Passwords** (`password is / = / : value`)
 
 All detected values are replaced with `*` characters **matching the original length**.
+
+---
+
+## 🚀 API
+**POST** `/mask`
+
+**URL** `https://masking-power-automate-1.onrender.com/mask` given by the render itself. After, you deploy your repo into it, going via new web servie. 
+
+**Request**
+```json
+{ "text": "My account is 123456789012 and password is Test@123" }
+```
+
+---
+
+## 🛩️Flow
+
+Power Automate → Get Email → HTTP POST → Masking API → Masked text
