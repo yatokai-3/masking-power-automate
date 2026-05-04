@@ -23,13 +23,13 @@ analyzer = AnalyzerEngine(
 
 anonymizer = AnonymizerEngine()
 
-TARGET_ENTITIES = ["PHONE_NUMBER", "EMAIL_ADDRESS", "PERSON"]
+# TARGET_ENTITIES = ["PHONE_NUMBER", "EMAIL_ADDRESS", "PERSON"]
 
 def mask_text(text):
     analyzer_results = analyzer.analyze(
         text=text,
         language="en",
-        entities=TARGET_ENTITIES
+        # entities=TARGET_ENTITIES
     )
 
     operators = {}
