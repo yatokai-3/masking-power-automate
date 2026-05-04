@@ -9,7 +9,7 @@ def home():
 
 @app.route("/health", methods=["GET"])
 def health():
-    return jsonify({"status": "healthy"})
+    return jsonify({"status": "healthy with new code"})
 
 @app.route("/mask", methods=["POST"])
 def mask():
