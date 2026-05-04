@@ -34,9 +34,12 @@ def mask_text(text):
 
     operators = {}
     for item in analyzer_results:
+        len_entity=len(item.entity_type)
         operators[item.entity_type] = OperatorConfig(
             "replace",
-            {"new_value": f"<{item.entity_type}>"}
+            # {"new_value": f"<{item.entity_type}>"}
+            {"new_value": "*"*len_entity}
+            
         )
 
     result = anonymizer.anonymize(
