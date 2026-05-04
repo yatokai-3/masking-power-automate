@@ -1,12 +1,28 @@
+import spacy
+
 from presidio_analyzer import AnalyzerEngine
+from presidio_analyzer.nlp_engine import SpacyNlpEngine
 from presidio_anonymizer import AnonymizerEngine
 from presidio_anonymizer.entities import OperatorConfig
 
-# Create once at startup
-analyzer = AnalyzerEngine()
+# Load the small spaCy model once
+loaded_spacy_model = spacy.load("en_core_web_sm")
+
+# Reuse the loaded spaCy pipeline so Presidio doesn't load its default model again
+class LoadedSpacyNlpEngine(SpacyNlpEngine):
+    def __init__(self, loaded_model):
+        super().__init__()
+        self.nlp = {"en": loaded_model}
+
+nlp_engine = LoadedSpacyNlpEngine(loaded_model=loaded_spacy_model)
+
+analyzer = AnalyzerEngine(
+    nlp_engine=nlp_engine,
+    supported_languages=["en"]
+)
+
 anonymizer = AnonymizerEngine()
 
-# Only detect what you actually need
 TARGET_ENTITIES = ["PHONE_NUMBER", "EMAIL_ADDRESS", "PERSON"]
 
 def mask_text(text):
@@ -30,6 +46,7 @@ def mask_text(text):
     )
 
     return result.text
+``
 
 
 # from presidio_analyzer import AnalyzerEngine
