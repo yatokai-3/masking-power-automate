@@ -46,7 +46,6 @@ def mask_text(text):
     )
 
     return result.text
-``
 
 
 # from presidio_analyzer import AnalyzerEngine
