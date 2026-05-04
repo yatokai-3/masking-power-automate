@@ -87,8 +87,8 @@ def mask_text(text):
 
     operators = {}
     for item in analyzer_results:
-        # original_value = text[item.start:item.end]
-        original_value = item.entity_type
+        original_value = text[item.start:item.end]
+        # original_value = item.entity_type
         operators[item.entity_type] = OperatorConfig(
             "replace",
             {"new_value": "*" * len(original_value)}
