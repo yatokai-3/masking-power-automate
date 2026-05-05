@@ -41,7 +41,21 @@ def make_regex_recognizer(entity_name, regex, score=0.5, context=None):
 # 3) Your custom recognizers
 # -----------------------------
 customs = [
+    # adding custom for name also, as a FALLBACK. . .
     make_regex_recognizer(
+        "PERSON_NAME",
+        r"\b[A-Z][a-z]+ [A-Z][a-z]+\b",
+        0.4,
+        ["name", "customer", "raised by"]
+    ),
+    # for passports. . .
+    make_regex_recognizer(
+        "PASSPORT_NUMBER",
+        r"\b[A-Z]{1,2}[0-9]{6,8}\b",
+        0.7,
+        ["passport"]
+    ),
+    make_regex_recognizer(  #custom masking for account number
         "ACCOUNT_NUMBER",
         r"\b\d{10,18}\b",
         0.6,
@@ -53,12 +67,31 @@ customs = [
         0.4,
         ["pin", "otp", "passcode", "verification code"]
     ),
+    
+    #---------------------------------------
     make_regex_recognizer(
         "PASSWORD",
         r"(?i)(password\s*(is|=|:)\s*[^\s,;]+)",
         0.8,
         ["password", "pwd", "secret"]
-    )
+    ),
+    make_regex_recognizer(
+        "PASSWORD",  # adding one more for edge cases of temperory. . .
+        r"(?i)(temporary\s+password\s*\n?[^\s,;]+)",
+        0.9,
+        ["temporary", "password"]
+    ),
+    #---------------------------------------
+    
+    # for bank related issues,
+    make_regex_recognizer(
+        "IFSC_CODE",
+        r"\b[A-Z]{4}0[A-Z0-9]{6}\b",
+        0.9,
+        ["ifsc", "bank", "branch"]
+    ),
+    
+
 ]
 # -----------------------------
 # 4) Build registry:
@@ -84,6 +117,13 @@ def mask_text(text):
         text=text,
         language="en"
     )
+    
+    # for half masking. . --> for e.g. card ***** ****** (card is visible)
+    analyzer_results = sorted(
+            analyzer_results,
+            key=lambda x: x.end - x.start,
+            reverse=True
+        )
 
     operators = {}
     for item in analyzer_results:
@@ -101,119 +141,3 @@ def mask_text(text):
     )
     
     return result.text
-
-
-
-# import spacy
-
-# from presidio_analyzer import AnalyzerEngine
-# from presidio_analyzer.nlp_engine import SpacyNlpEngine
-# from presidio_anonymizer import AnonymizerEngine
-# from presidio_anonymizer.entities import OperatorConfig
-
-# # Load the small spaCy model once
-# loaded_spacy_model = spacy.load("en_core_web_sm")
-
-# # Reuse the loaded spaCy pipeline so Presidio doesn't load its default model again
-# class LoadedSpacyNlpEngine(SpacyNlpEngine):
-#     def __init__(self, loaded_model):
-#         super().__init__()
-#         self.nlp = {"en": loaded_model}
-
-# nlp_engine = LoadedSpacyNlpEngine(loaded_model=loaded_spacy_model)
-
-# analyzer = AnalyzerEngine(
-#     nlp_engine=nlp_engine,
-#     supported_languages=["en"]
-# )
-
-# anonymizer = AnonymizerEngine()
-
-# # TARGET_ENTITIES = ["PHONE_NUMBER", "EMAIL_ADDRESS", "PERSON"]
-
-# def mask_text(text):
-#     analyzer_results = analyzer.analyze(
-#         text=text,
-#         language="en",
-#         # entities=TARGET_ENTITIES
-#     )
-
-#     operators = {}
-#     for item in analyzer_results:
-#         len_entity=len(item.entity_type)
-#         operators[item.entity_type] = OperatorConfig(
-#             "replace",
-#             # {"new_value": f"<{item.entity_type}>"}
-#             {"new_value": "*"*len_entity}
-            
-#         )
-
-#     result = anonymizer.anonymize(
-#         text=text,
-#         analyzer_results=analyzer_results,
-#         operators=operators
-#     )
-
-#     return result.text
-
-
-# from presidio_analyzer import AnalyzerEngine
-# from presidio_anonymizer import AnonymizerEngine
-# from presidio_anonymizer.entities import OperatorConfig
-
-# analyzer = AnalyzerEngine()
-# anonymizer = AnonymizerEngine()
-
-# def mask_text(text):
-#     analyzer_results = analyzer.analyze(
-#         text=text,
-#         language="en"
-#     )
-
-#     operators = {}
-#     for item in analyzer_results:
-#         operators[item.entity_type] = OperatorConfig(
-#             "replace",
-#             {"new_value": f"<{item.entity_type}>"}
-#         )
-
-#     result = anonymizer.anonymize(
-#         text=text,
-#         analyzer_results=analyzer_results,
-#         operators=operators
-#     )
-
-#     return result.text
-
-# from presidio_analyzer import AnalyzerEngine
-# from presidio_anonymizer import AnonymizerEngine
-# from presidio_anonymizer.entities import OperatorConfig
-
-# def mask_text(text):
-#     analyzer = AnalyzerEngine()
-#     analyzer_results = analyzer.analyze(
-#         text=text,
-#         language="en"
-#     )
-
-#     anonymizer = AnonymizerEngine()
-
-#     operators = {}
-#     for item in analyzer_results:
-#         operators[item.entity_type] = OperatorConfig(
-#             "replace",
-#             {"new_value": f"<{item.entity_type}>"}
-#         )
-
-#     result = anonymizer.anonymize(
-#         text=text,
-#         analyzer_results=analyzer_results,
-#         operators=operators
-#     )
-
-#     return result.text
-
-
-# if __name__ == "__main__":
-#     sample = "Hi, my name is Aryasen Gupta. My phone number is 212-555-5555 and email is aryasen@example.com"
-#     print(mask_text(sample))
