@@ -42,12 +42,12 @@ def make_regex_recognizer(entity_name, regex, score=0.5, context=None):
 # -----------------------------
 customs = [
     # adding custom for name also, as a FALLBACK. . .
-    make_regex_recognizer(
-        "PERSON_NAME",
-        r"\b[A-Z][a-z]+ [A-Z][a-z]+\b",
-        0.4,
-        ["name", "customer", "raised by"]
-    ),
+    # make_regex_recognizer(
+    #     "PERSON_NAME",
+    #     r"\b[A-Z][a-z]+ [A-Z][a-z]+\b",
+    #     0.4,
+    #     ["name", "customer", "raised by"]
+    # ),
     # for passports. . .
     make_regex_recognizer(
         "PASSPORT_NUMBER",
@@ -119,11 +119,11 @@ def mask_text(text):
     )
     
     # for half masking. . --> for e.g. card ***** ****** (card is visible)
-    analyzer_results = sorted(
-            analyzer_results,
-            key=lambda x: x.end - x.start,
-            reverse=True
-        )
+    # analyzer_results = sorted(
+    #         analyzer_results,
+    #         key=lambda x: x.end - x.start,
+    #         reverse=True
+    #     )
 
     operators = {}
     for item in analyzer_results:
